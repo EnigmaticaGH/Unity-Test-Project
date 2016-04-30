@@ -3,26 +3,33 @@ using System.Collections;
 
 public class PlayerAbilities : MonoBehaviour
 {
-    Ability ability;
-    void Start()
+    private Ability[] abilities;
+
+    void Awake()
     {
-        ability = new Ability("Ability 1", Active, 2.5f, 1);
+        abilities = new Ability[]
+        {
+            new Ability("Random Move", KeyCode.Space, Active, 2, 10)
+        };
     }
 
     void Update()
     {
-        if (Input.GetKeyUp(KeyCode.Space) && ability.AbilityStatus == Ability.Status.Ready)
+        foreach(Ability a in abilities)
         {
-            ability.Activate();
+            if (GameInput.Up(a.Name) && a.AbilityStatus == Ability.Status.Ready)
+            {
+                a.Activate();
+            }
         }
     }
 
-    void Active()
+    void Active(Ability activeAbility)
     {
-        StartCoroutine(AbilityActive());
+        StartCoroutine(AbilityActive(activeAbility));
     }
 
-    IEnumerator AbilityActive()
+    IEnumerator AbilityActive(Ability ability)
     {
         float x = Random.Range(-5, 5);
         float y = Random.Range(-5, 5);
